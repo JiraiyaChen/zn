@@ -1,0 +1,2129 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>正念 · Mindfulness</title>
+    <style>
+      /* ─── 基础重置 ─── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d1117;
+        --surface: rgba(255, 255, 255, 0.05);
+        --border: rgba(255, 255, 255, 0.1);
+        --accent1: #7c9cbf;
+        --accent2: #a3c4a8;
+        --accent3: #c9a0dc;
+        --text: #d4dde8;
+        --muted: #6b7f93;
+        --font: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ─── 星空背景 ─── */
+      .stars {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background: radial-gradient(
+            ellipse at 20% 50%,
+            rgba(124, 156, 191, 0.08) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 20%,
+            rgba(163, 196, 168, 0.06) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 60% 80%,
+            rgba(201, 160, 220, 0.06) 0%,
+            transparent 50%
+          ),
+          #0d1117;
+      }
+      .stars::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+            1px 1px at 12% 22%,
+            rgba(255, 255, 255, 0.5) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 35% 8%,
+            rgba(255, 255, 255, 0.4) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 78% 35%,
+            rgba(255, 255, 255, 0.5) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 55% 65%,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 91% 78%,
+            rgba(255, 255, 255, 0.4) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 4% 55%,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 67% 10%,
+            rgba(255, 255, 255, 0.5) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 23% 85%,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 48% 42%,
+            rgba(255, 255, 255, 0.4) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 82% 92%,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1.5px 1.5px at 18% 70%,
+            rgba(255, 255, 255, 0.6) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1.5px 1.5px at 72% 58%,
+            rgba(255, 255, 255, 0.5) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 40% 95%,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 95% 15%,
+            rgba(255, 255, 255, 0.4) 0%,
+            transparent 100%
+          );
+      }
+
+      /* ─── 布局容器 ─── */
+      .container {
+        position: relative;
+        z-index: 1;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* ─── 顶部导航 ─── */
+      header {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 28px 24px 0;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .logo {
+        font-size: 1.25rem;
+        font-weight: 300;
+        letter-spacing: 0.2em;
+        color: var(--accent1);
+      }
+      nav {
+        display: flex;
+        gap: 8px;
+      }
+      nav button {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.9rem;
+        padding: 6px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          background 0.2s;
+        letter-spacing: 0.05em;
+      }
+      nav button:hover,
+      nav button.active {
+        color: var(--text);
+        background: var(--surface);
+      }
+
+      /* ─── 页面切换 ─── */
+      .page {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+      .page.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ═══════════════════════════════════
+       首页 — Hero
+    ═══════════════════════════════════ */
+      .hero {
+        text-align: center;
+        padding: 80px 0 60px;
+      }
+      .hero-subtitle {
+        font-size: 0.85rem;
+        letter-spacing: 0.35em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 28px;
+      }
+      .hero h1 {
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        font-weight: 200;
+        line-height: 1.25;
+        letter-spacing: 0.08em;
+        background: linear-gradient(
+          135deg,
+          var(--accent1),
+          var(--accent2),
+          var(--accent3)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+      }
+      .hero p {
+        font-size: 1.05rem;
+        color: var(--muted);
+        line-height: 1.8;
+        max-width: 480px;
+        margin: 0 auto 48px;
+        font-weight: 300;
+      }
+      .hero-cta {
+        display: inline-block;
+        padding: 14px 36px;
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        color: var(--text);
+        font: inherit;
+        font-size: 0.95rem;
+        letter-spacing: 0.1em;
+        background: var(--surface);
+        cursor: pointer;
+        transition:
+          border-color 0.25s,
+          background 0.25s,
+          transform 0.2s;
+        backdrop-filter: blur(6px);
+      }
+      .hero-cta:hover {
+        border-color: var(--accent1);
+        background: rgba(124, 156, 191, 0.12);
+        transform: translateY(-2px);
+      }
+
+      /* 今日引言卡片 */
+      .quote-card {
+        margin: 0 auto 64px;
+        max-width: 560px;
+        padding: 32px 36px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        text-align: left;
+      }
+      .quote-card .tag {
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        color: var(--accent2);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .quote-card blockquote {
+        font-size: 1.1rem;
+        font-weight: 300;
+        line-height: 1.9;
+        color: var(--text);
+        font-style: italic;
+      }
+      .quote-card cite {
+        display: block;
+        margin-top: 16px;
+        font-size: 0.85rem;
+        color: var(--muted);
+        font-style: normal;
+      }
+      .quote-refresh {
+        margin-top: 18px;
+        background: none;
+        border: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.82rem;
+        cursor: pointer;
+        letter-spacing: 0.08em;
+        transition: color 0.2s;
+      }
+      .quote-refresh:hover {
+        color: var(--accent1);
+      }
+
+      /* 功能卡片网格 */
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+      .feature-card {
+        padding: 28px 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        cursor: pointer;
+        transition:
+          border-color 0.25s,
+          transform 0.25s,
+          background 0.25s;
+        backdrop-filter: blur(8px);
+      }
+      .feature-card:hover {
+        border-color: rgba(255, 255, 255, 0.22);
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .feature-icon {
+        font-size: 1.8rem;
+        margin-bottom: 14px;
+      }
+      .feature-card h3 {
+        font-size: 1rem;
+        font-weight: 400;
+        margin-bottom: 8px;
+        letter-spacing: 0.04em;
+      }
+      .feature-card p {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* ═══════════════════════════════════
+       呼吸练习
+    ═══════════════════════════════════ */
+      .breath-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 0;
+        text-align: center;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        margin-bottom: 8px;
+      }
+      .section-desc {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 48px;
+        letter-spacing: 0.05em;
+      }
+
+      /* 呼吸模式选择 */
+      .breath-modes {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 52px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .mode-btn {
+        padding: 8px 20px;
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        background: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .mode-btn:hover,
+      .mode-btn.active {
+        border-color: var(--accent1);
+        color: var(--accent1);
+        background: rgba(124, 156, 191, 0.1);
+      }
+
+      /* 呼吸球 */
+      .breath-orb-wrapper {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .glow-ring {
+        position: absolute;
+        border-radius: 50%;
+        background: transparent;
+      }
+      .glow-ring-1 {
+        width: 260px;
+        height: 260px;
+        border: 1px solid rgba(124, 156, 191, 0.2);
+        animation: pulse-ring 4s ease-in-out infinite;
+      }
+      .glow-ring-2 {
+        width: 220px;
+        height: 220px;
+        border: 1px solid rgba(163, 196, 168, 0.15);
+        animation: pulse-ring 4s ease-in-out infinite 0.5s;
+      }
+      @keyframes pulse-ring {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.04);
+        }
+      }
+      .breath-orb {
+        position: relative;
+        z-index: 2;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 35% 35%,
+          rgba(163, 196, 168, 0.6),
+          rgba(124, 156, 191, 0.4),
+          rgba(201, 160, 220, 0.3)
+        );
+        box-shadow:
+          0 0 40px rgba(124, 156, 191, 0.25),
+          0 0 80px rgba(124, 156, 191, 0.1);
+        cursor: pointer;
+        transition: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .orb-label {
+        font-size: 0.95rem;
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        color: rgba(255, 255, 255, 0.85);
+        pointer-events: none;
+      }
+
+      /* 呼吸状态文字 */
+      .breath-status {
+        font-size: 1.35rem;
+        font-weight: 200;
+        letter-spacing: 0.2em;
+        color: var(--text);
+        min-height: 2rem;
+        transition: opacity 0.4s;
+      }
+      .breath-count {
+        font-size: 2.5rem;
+        font-weight: 100;
+        color: var(--accent1);
+        margin: 8px 0;
+        font-variant-numeric: tabular-nums;
+      }
+      .breath-info {
+        font-size: 0.82rem;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+        margin-bottom: 32px;
+      }
+      .breath-start-btn {
+        padding: 12px 44px;
+        border: 1px solid var(--accent1);
+        border-radius: 50px;
+        background: rgba(124, 156, 191, 0.1);
+        color: var(--accent1);
+        font: inherit;
+        font-size: 0.95rem;
+        letter-spacing: 0.12em;
+        cursor: pointer;
+        transition:
+          background 0.25s,
+          transform 0.2s;
+      }
+      .breath-start-btn:hover {
+        background: rgba(124, 156, 191, 0.2);
+        transform: scale(1.02);
+      }
+
+      /* 呼吸动画关键帧 (JS 动态注入) */
+      .breath-orb.inhale {
+        animation: orb-inhale var(--in-dur, 4s) ease-in-out forwards;
+      }
+      .breath-orb.hold {
+        animation: orb-hold var(--hold-dur, 4s) ease-in-out forwards;
+      }
+      .breath-orb.exhale {
+        animation: orb-exhale var(--ex-dur, 4s) ease-in-out forwards;
+      }
+      .breath-orb.hold2 {
+        animation: orb-hold var(--hold2-dur, 2s) ease-in-out forwards;
+      }
+
+      @keyframes orb-inhale {
+        from {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        to {
+          transform: scale(1.55);
+          opacity: 1;
+        }
+      }
+      @keyframes orb-hold {
+        from {
+          transform: scale(1.55);
+          opacity: 1;
+        }
+        to {
+          transform: scale(1.55);
+          opacity: 1;
+        }
+      }
+      @keyframes orb-exhale {
+        from {
+          transform: scale(1.55);
+          opacity: 1;
+        }
+        to {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+      }
+
+      /* ═══════════════════════════════════
+       冥想计时器
+    ═══════════════════════════════════ */
+      .timer-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 0;
+        text-align: center;
+      }
+      .timer-presets {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .preset-btn {
+        padding: 8px 22px;
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        background: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .preset-btn:hover,
+      .preset-btn.active {
+        border-color: var(--accent3);
+        color: var(--accent3);
+        background: rgba(201, 160, 220, 0.1);
+      }
+
+      /* SVG 圆形进度 */
+      .timer-circle-wrap {
+        position: relative;
+        width: 240px;
+        height: 240px;
+        margin-bottom: 40px;
+      }
+      .timer-svg {
+        transform: rotate(-90deg);
+      }
+      .timer-track {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.06);
+        stroke-width: 4;
+      }
+      .timer-progress {
+        fill: none;
+        stroke: url(#timerGrad);
+        stroke-width: 4;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.9s linear;
+      }
+      .timer-center {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .timer-display {
+        font-size: 3rem;
+        font-weight: 100;
+        letter-spacing: 0.06em;
+        font-variant-numeric: tabular-nums;
+        color: var(--text);
+      }
+      .timer-label {
+        font-size: 0.78rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .timer-controls {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .timer-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(6px);
+      }
+      .timer-btn:hover {
+        border-color: var(--accent3);
+        background: rgba(201, 160, 220, 0.12);
+      }
+      .timer-btn.primary {
+        width: 64px;
+        height: 64px;
+        border-color: var(--accent3);
+        background: rgba(201, 160, 220, 0.15);
+        font-size: 1.4rem;
+      }
+
+      /* 环境音 */
+      .ambient-section {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 480px;
+      }
+      .ambient-title {
+        font-size: 0.78rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .ambient-sounds {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .sound-btn {
+        padding: 8px 18px;
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        background: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sound-btn:hover,
+      .sound-btn.active {
+        border-color: var(--accent2);
+        color: var(--accent2);
+        background: rgba(163, 196, 168, 0.1);
+      }
+
+      /* ═══════════════════════════════════
+       正念日记
+    ═══════════════════════════════════ */
+      .journal-section {
+        padding: 60px 0;
+      }
+      .journal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 32px;
+      }
+      .journal-date {
+        font-size: 0.82rem;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+      }
+      .mood-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .mood-btn {
+        flex: 1;
+        padding: 12px 8px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1.4rem;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .mood-btn span {
+        font-size: 0.72rem;
+        color: var(--muted);
+        font-family: var(--font);
+      }
+      .mood-btn:hover,
+      .mood-btn.selected {
+        border-color: var(--accent2);
+        background: rgba(163, 196, 168, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .journal-textarea {
+        width: 100%;
+        min-height: 180px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px 22px;
+        color: var(--text);
+        font: inherit;
+        font-size: 0.95rem;
+        line-height: 1.8;
+        resize: vertical;
+        outline: none;
+        transition: border-color 0.2s;
+        backdrop-filter: blur(6px);
+      }
+      .journal-textarea::placeholder {
+        color: var(--muted);
+      }
+      .journal-textarea:focus {
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .journal-prompts {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 14px 0;
+      }
+      .prompt-chip {
+        padding: 5px 14px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .prompt-chip:hover {
+        border-color: var(--accent1);
+        color: var(--accent1);
+      }
+
+      .journal-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 16px;
+        gap: 12px;
+      }
+      .save-btn {
+        padding: 10px 28px;
+        border: 1px solid var(--accent2);
+        border-radius: 30px;
+        background: rgba(163, 196, 168, 0.12);
+        color: var(--accent2);
+        font: inherit;
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .save-btn:hover {
+        background: rgba(163, 196, 168, 0.2);
+      }
+
+      /* 日记列表 */
+      .journal-entries {
+        margin-top: 40px;
+      }
+      .entries-title {
+        font-size: 0.78rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .entry-item {
+        padding: 18px 20px;
+        margin-bottom: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        animation: fadeIn 0.3s ease;
+      }
+      .entry-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .entry-date-tag {
+        font-size: 0.78rem;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+      }
+      .entry-mood {
+        font-size: 1.1rem;
+      }
+      .entry-text {
+        font-size: 0.88rem;
+        color: var(--text);
+        line-height: 1.7;
+      }
+
+      /* ═══════════════════════════════════
+       通用工具样式
+    ═══════════════════════════════════ */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0 0 40px;
+      }
+
+      /* 滚动条 */
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+      }
+
+      /* ═══════════════════════════════════
+       专注倒计时
+    ═══════════════════════════════════ */
+      .countdown-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 0;
+        text-align: center;
+        width: 100%;
+      }
+
+      .cd-task-input {
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 18px;
+        color: var(--text);
+        font: inherit;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        outline: none;
+        text-align: center;
+        margin-bottom: 28px;
+        transition: border-color 0.2s;
+        backdrop-filter: blur(6px);
+      }
+      .cd-task-input::placeholder {
+        color: var(--muted);
+      }
+      .cd-task-input:focus {
+        border-color: rgba(212, 165, 116, 0.5);
+      }
+
+      .cd-presets {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 36px;
+      }
+      .cd-preset-btn {
+        padding: 7px 18px;
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        background: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 0.83rem;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cd-preset-btn:hover,
+      .cd-preset-btn.active {
+        border-color: rgba(212, 165, 116, 0.8);
+        color: #d4a574;
+        background: rgba(212, 165, 116, 0.1);
+      }
+
+      .cd-picker {
+        display: flex;
+        align-items: flex-start;
+        gap: 4px;
+        margin-bottom: 28px;
+        transition: opacity 0.3s;
+      }
+      .cd-picker.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .cd-unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .cd-arrow {
+        width: 36px;
+        height: 28px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--muted);
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cd-arrow:hover {
+        border-color: rgba(212, 165, 116, 0.7);
+        color: #d4a574;
+        background: rgba(212, 165, 116, 0.1);
+      }
+      .cd-num {
+        font-size: 3rem;
+        font-weight: 100;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.04em;
+        color: var(--text);
+        line-height: 1;
+        padding: 4px 0;
+        min-width: 3.2ch;
+        text-align: center;
+      }
+      .cd-sep {
+        font-size: 2.6rem;
+        font-weight: 100;
+        color: var(--muted);
+        padding-top: 34px;
+        align-self: flex-start;
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+      .cd-unit-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .cd-task-label {
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        color: #d4a574;
+        margin-bottom: 12px;
+        min-height: 1.3em;
+      }
+
+      .cd-display {
+        font-size: 4.8rem;
+        font-weight: 100;
+        letter-spacing: 0.06em;
+        font-variant-numeric: tabular-nums;
+        color: var(--text);
+        transition: color 0.4s;
+        margin-bottom: 20px;
+      }
+      .cd-display.urgent {
+        color: #e07b6b;
+        animation: cdUrgent 0.6s ease-in-out infinite alternate;
+      }
+      @keyframes cdUrgent {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0.45;
+        }
+      }
+
+      .cd-progress-track {
+        width: 100%;
+        max-width: 400px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 32px;
+      }
+      .cd-progress-fill {
+        height: 100%;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #d4a574, #c9a0dc);
+        transition: width 0.9s linear;
+        width: 100%;
+      }
+
+      .cd-controls {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 44px;
+      }
+      .cd-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(6px);
+      }
+      .cd-btn:hover {
+        border-color: rgba(212, 165, 116, 0.6);
+        background: rgba(212, 165, 116, 0.1);
+      }
+      .cd-btn.primary {
+        width: 64px;
+        height: 64px;
+        border-color: rgba(212, 165, 116, 0.8);
+        background: rgba(212, 165, 116, 0.15);
+        font-size: 1.4rem;
+      }
+
+      .cd-done-msg {
+        font-size: 1.1rem;
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        color: #d4a574;
+        margin-bottom: 32px;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .cd-history {
+        width: 100%;
+        max-width: 480px;
+      }
+      .cd-history-title {
+        font-size: 0.78rem;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      .cd-history-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 8px;
+        animation: fadeIn 0.3s ease;
+      }
+      .cd-history-name {
+        font-size: 0.88rem;
+        color: var(--text);
+      }
+      .cd-history-meta {
+        font-size: 0.78rem;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+
+      /* ─── 响应式 ─── */
+      @media (max-width: 560px) {
+        .breath-orb-wrapper {
+          width: 220px;
+          height: 220px;
+        }
+        .glow-ring-1 {
+          width: 220px;
+          height: 220px;
+        }
+        .glow-ring-2 {
+          width: 185px;
+          height: 185px;
+        }
+        .mood-btn span {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars"></div>
+
+    <!-- ── 顶部导航 ── -->
+    <header>
+      <div class="logo">正 念</div>
+      <nav>
+        <button class="active" data-page="home">首页</button>
+        <button data-page="breath">呼吸</button>
+        <button data-page="timer">冥想</button>
+        <button data-page="journal">日记</button>
+        <button data-page="countdown">倒计时</button>
+      </nav>
+    </header>
+
+    <div class="container">
+      <!-- ════════════════ 首页 ════════════════ -->
+      <div class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-subtitle">每一刻 · 皆圆满</div>
+          <h1>活在<br />当下</h1>
+          <p>
+            正念不是逃离，而是全然地与当下相遇。<br />
+            放下过去，放下未来，只是此时此刻。
+          </p>
+          <button class="hero-cta" onclick="showPage('breath')">
+            开始练习
+          </button>
+        </div>
+
+        <div class="quote-card">
+          <div class="tag">今日正念</div>
+          <blockquote id="daily-quote">正在加载...</blockquote>
+          <cite id="daily-author"></cite>
+          <button class="quote-refresh" onclick="refreshQuote()">
+            ↻ 换一句
+          </button>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-card" onclick="showPage('breath')">
+            <div class="feature-icon">🌬</div>
+            <h3>呼吸练习</h3>
+            <p>通过引导式呼吸，平复身心，回到当下。</p>
+          </div>
+          <div class="feature-card" onclick="showPage('timer')">
+            <div class="feature-icon">🔔</div>
+            <h3>冥想计时</h3>
+            <p>为你的冥想设定时间，专注当下片刻。</p>
+          </div>
+          <div class="feature-card" onclick="showPage('journal')">
+            <div class="feature-icon">📖</div>
+            <h3>正念日记</h3>
+            <p>记录内心感受，觉察情绪流动的轨迹。</p>
+          </div>
+          <div class="feature-card" onclick="showPage('countdown')">
+            <div class="feature-icon">⏳</div>
+            <h3>专注倒计时</h3>
+            <p>为任务划定时间，让每一分钟都有着落。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════ 呼吸 ════════════════ -->
+      <div class="page" id="page-breath">
+        <div class="breath-section">
+          <div class="section-title">呼吸练习</div>
+          <div class="section-desc">跟随节奏，让呼吸成为锚点</div>
+
+          <div class="breath-modes" id="breath-modes">
+            <button class="mode-btn active" data-mode="478">4-7-8 放松</button>
+            <button class="mode-btn" data-mode="box">方形呼吸</button>
+            <button class="mode-btn" data-mode="calm">4-4 平静</button>
+            <button class="mode-btn" data-mode="deep">深度放松</button>
+          </div>
+
+          <div class="breath-orb-wrapper">
+            <div class="glow-ring glow-ring-1"></div>
+            <div class="glow-ring glow-ring-2"></div>
+            <div class="breath-orb" id="breath-orb" onclick="toggleBreath()">
+              <span class="orb-label" id="orb-label">点击开始</span>
+            </div>
+          </div>
+
+          <div class="breath-status" id="breath-status"></div>
+          <div class="breath-count" id="breath-count"></div>
+          <div class="breath-info" id="breath-info"></div>
+          <button
+            class="breath-start-btn"
+            id="breath-start-btn"
+            onclick="toggleBreath()"
+          >
+            开始
+          </button>
+        </div>
+      </div>
+
+      <!-- ════════════════ 冥想计时器 ════════════════ -->
+      <div class="page" id="page-timer">
+        <div class="timer-section">
+          <div class="section-title">冥想计时</div>
+          <div class="section-desc">为此刻设定一段专属的静默</div>
+
+          <div class="timer-presets" id="timer-presets">
+            <button class="preset-btn active" data-mins="5">5 分钟</button>
+            <button class="preset-btn" data-mins="10">10 分钟</button>
+            <button class="preset-btn" data-mins="15">15 分钟</button>
+            <button class="preset-btn" data-mins="20">20 分钟</button>
+            <button class="preset-btn" data-mins="30">30 分钟</button>
+          </div>
+
+          <div class="timer-circle-wrap">
+            <svg
+              class="timer-svg"
+              width="240"
+              height="240"
+              viewBox="0 0 240 240"
+            >
+              <defs>
+                <linearGradient
+                  id="timerGrad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stop-color="#a3c4a8" />
+                  <stop offset="100%" stop-color="#c9a0dc" />
+                </linearGradient>
+              </defs>
+              <circle class="timer-track" cx="120" cy="120" r="108" />
+              <circle
+                class="timer-progress"
+                id="timer-progress"
+                cx="120"
+                cy="120"
+                r="108"
+                stroke-dasharray="678.6"
+                stroke-dashoffset="0"
+              />
+            </svg>
+            <div class="timer-center">
+              <div class="timer-display" id="timer-display">05:00</div>
+              <div class="timer-label" id="timer-label">准备好了吗</div>
+            </div>
+          </div>
+
+          <div class="timer-controls">
+            <button class="timer-btn" onclick="adjustTimer(-60)" title="-1分">
+              −
+            </button>
+            <button
+              class="timer-btn primary"
+              id="timer-play-btn"
+              onclick="toggleTimer()"
+            >
+              ▶
+            </button>
+            <button class="timer-btn" onclick="resetTimer()" title="重置">
+              ↺
+            </button>
+          </div>
+
+          <!-- 环境音 -->
+          <div class="ambient-section">
+            <div class="ambient-title">环境音效</div>
+            <div class="ambient-sounds">
+              <button
+                class="sound-btn"
+                data-sound="rain"
+                onclick="toggleSound(this)"
+              >
+                🌧 雨声
+              </button>
+              <button
+                class="sound-btn"
+                data-sound="forest"
+                onclick="toggleSound(this)"
+              >
+                🌿 森林
+              </button>
+              <button
+                class="sound-btn"
+                data-sound="ocean"
+                onclick="toggleSound(this)"
+              >
+                🌊 海浪
+              </button>
+              <button
+                class="sound-btn"
+                data-sound="fire"
+                onclick="toggleSound(this)"
+              >
+                🔥 篝火
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════ 正念日记 ════════════════ -->
+      <div class="page" id="page-journal">
+        <div class="journal-section">
+          <div class="journal-header">
+            <div>
+              <div class="section-title">正念日记</div>
+              <div class="section-desc" style="margin-bottom: 0">
+                记录，是对自己的凝视
+              </div>
+            </div>
+            <div class="journal-date" id="journal-date"></div>
+          </div>
+
+          <!-- 心情选择 -->
+          <div class="mood-row" id="mood-row">
+            <button class="mood-btn" data-mood="😌"><span>平静</span></button>
+            <button class="mood-btn" data-mood="😊"><span>愉悦</span></button>
+            <button class="mood-btn" data-mood="😌"><span>满足</span></button>
+            <button class="mood-btn" data-mood="😔"><span>低落</span></button>
+            <button class="mood-btn" data-mood="😟"><span>焦虑</span></button>
+            <button class="mood-btn" data-mood="😤"><span>烦躁</span></button>
+          </div>
+
+          <!-- 快速引导词 -->
+          <div class="journal-prompts">
+            <span class="prompt-chip" onclick="injectPrompt('此刻我注意到...')"
+              >此刻我注意到...</span
+            >
+            <span class="prompt-chip" onclick="injectPrompt('我感激...')"
+              >我感激...</span
+            >
+            <span class="prompt-chip" onclick="injectPrompt('让我放下...')"
+              >让我放下...</span
+            >
+            <span class="prompt-chip" onclick="injectPrompt('我需要的是...')"
+              >我需要的是...</span
+            >
+            <span class="prompt-chip" onclick="injectPrompt('今天的礼物是...')"
+              >今天的礼物是...</span
+            >
+          </div>
+
+          <textarea
+            class="journal-textarea"
+            id="journal-textarea"
+            placeholder="把你的感受写在这里...不需要华丽，只需真实。"
+          ></textarea>
+
+          <div class="journal-footer">
+            <button class="save-btn" onclick="saveEntry()">保存这一刻</button>
+          </div>
+
+          <!-- 历史记录 -->
+          <div class="journal-entries">
+            <div class="entries-title">过往记录</div>
+            <div id="entries-list"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ════════════════ 倒计时 ════════════════ -->
+      <div class="page" id="page-countdown">
+        <div class="countdown-section">
+          <div class="section-title">专注倒计时</div>
+          <div class="section-desc">为任务划定时间，让专注成为礼物</div>
+
+          <input
+            class="cd-task-input"
+            id="cd-task-name"
+            type="text"
+            placeholder="这段时间，你想做什么？"
+            maxlength="40"
+          />
+
+          <div class="cd-presets">
+            <button
+              class="cd-preset-btn"
+              data-mins="5"
+              onclick="cdQuickSet(5, this)"
+            >
+              5 分
+            </button>
+            <button
+              class="cd-preset-btn"
+              data-mins="10"
+              onclick="cdQuickSet(10, this)"
+            >
+              10 分
+            </button>
+            <button
+              class="cd-preset-btn active"
+              data-mins="25"
+              onclick="cdQuickSet(25, this)"
+            >
+              25 分
+            </button>
+            <button
+              class="cd-preset-btn"
+              data-mins="45"
+              onclick="cdQuickSet(45, this)"
+            >
+              45 分
+            </button>
+            <button
+              class="cd-preset-btn"
+              data-mins="60"
+              onclick="cdQuickSet(60, this)"
+            >
+              60 分
+            </button>
+          </div>
+
+          <div class="cd-picker" id="cd-picker">
+            <div class="cd-unit">
+              <button class="cd-arrow" onclick="cdAdjust('h', 1)">▲</button>
+              <div class="cd-num" id="cd-h">00</div>
+              <button class="cd-arrow" onclick="cdAdjust('h', -1)">▼</button>
+              <div class="cd-unit-label">时</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit">
+              <button class="cd-arrow" onclick="cdAdjust('m', 1)">▲</button>
+              <div class="cd-num" id="cd-m">25</div>
+              <button class="cd-arrow" onclick="cdAdjust('m', -1)">▼</button>
+              <div class="cd-unit-label">分</div>
+            </div>
+            <div class="cd-sep">:</div>
+            <div class="cd-unit">
+              <button class="cd-arrow" onclick="cdAdjust('s', 1)">▲</button>
+              <div class="cd-num" id="cd-s">00</div>
+              <button class="cd-arrow" onclick="cdAdjust('s', -1)">▼</button>
+              <div class="cd-unit-label">秒</div>
+            </div>
+          </div>
+
+          <div class="cd-task-label" id="cd-task-label"></div>
+          <div class="cd-display" id="cd-display">25:00</div>
+
+          <div class="cd-progress-track">
+            <div class="cd-progress-fill" id="cd-progress-fill"></div>
+          </div>
+
+          <div id="cd-done-msg" class="cd-done-msg" style="display: none">
+            ✦ 任务完成，好好休息 ✦
+          </div>
+
+          <div class="cd-controls">
+            <button class="cd-btn" onclick="resetCountdown()" title="重置">
+              ↺
+            </button>
+            <button
+              class="cd-btn primary"
+              id="cd-play-btn"
+              onclick="toggleCountdown()"
+            >
+              ▶
+            </button>
+          </div>
+
+          <div class="cd-history">
+            <div class="cd-history-title">已完成任务</div>
+            <div id="cd-history-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /container -->
+
+    <script>
+      // ═══════════════════════════════════════════
+      //  数据
+      // ═══════════════════════════════════════════
+      const QUOTES = [
+        { text: '你无法停止海浪，但你可以学会冲浪。', author: '卡巴金' },
+        {
+          text: '正念就是：不加评判地，有意识地，活在当下。',
+          author: '乔·卡巴金',
+        },
+        { text: '呼吸是我们与当下唯一的纽带。', author: '蒂克·纳特·汉' },
+        { text: '每一次呼吸，都是重新开始的机会。', author: '佚名' },
+        { text: '平静不是事物消失，而是你不再被事物席卷。', author: '佚名' },
+        { text: '在慢下来的瞬间，生命才真正流过你。', author: '佚名' },
+        {
+          text: '不去评判，只是观察，这就是自由的开始。',
+          author: '蒂克·纳特·汉',
+        },
+        { text: '感谢此刻，它将不再重来。', author: '佚名' },
+        { text: '放下不是失去，而是给内心腾出空间。', author: '佚名' },
+        { text: '身体在哪里，心就在哪里。这就是正念。', author: '卡巴金' },
+        { text: '深呼吸，到达自己。', author: '蒂克·纳特·汉' },
+        { text: '觉知本身就是疗愈。', author: '卡尔·罗杰斯' },
+      ];
+
+      let currentQuoteIdx = -1;
+      function refreshQuote() {
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * QUOTES.length);
+        } while (idx === currentQuoteIdx);
+        currentQuoteIdx = idx;
+        const q = QUOTES[idx];
+        document.getElementById('daily-quote').textContent =
+          '\u201c' + q.text + '\u201d';
+        document.getElementById('daily-author').textContent = '— ' + q.author;
+      }
+
+      // ═══════════════════════════════════════════
+      //  导航
+      // ═══════════════════════════════════════════
+      function showPage(name) {
+        document
+          .querySelectorAll('.page')
+          .forEach((p) => p.classList.remove('active'));
+        document
+          .querySelectorAll('nav button')
+          .forEach((b) => b.classList.remove('active'));
+        document.getElementById('page-' + name).classList.add('active');
+        document
+          .querySelector(`nav button[data-page="${name}"]`)
+          .classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      document.querySelectorAll('nav button').forEach((btn) => {
+        btn.addEventListener('click', () => showPage(btn.dataset.page));
+      });
+
+      // ═══════════════════════════════════════════
+      //  呼吸练习
+      // ═══════════════════════════════════════════
+      const BREATH_MODES = {
+        478: { label: '4-7-8 放松', inhale: 4, hold: 7, exhale: 8, hold2: 0 },
+        box: { label: '方形呼吸', inhale: 4, hold: 4, exhale: 4, hold2: 4 },
+        calm: { label: '4-4 平静', inhale: 4, hold: 0, exhale: 4, hold2: 0 },
+        deep: { label: '深度放松', inhale: 5, hold: 2, exhale: 7, hold2: 0 },
+      };
+      let breathRunning = false;
+      let breathMode = '478';
+      let breathTimer = null;
+      let breathRound = 0;
+
+      document.querySelectorAll('#breath-modes .mode-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document
+            .querySelectorAll('#breath-modes .mode-btn')
+            .forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          breathMode = btn.dataset.mode;
+          if (breathRunning) {
+            stopBreath();
+          }
+          updateBreathInfo();
+        });
+      });
+
+      function updateBreathInfo() {
+        const m = BREATH_MODES[breathMode];
+        const parts = [`吸气 ${m.inhale}s`];
+        if (m.hold) parts.push(`屏息 ${m.hold}s`);
+        parts.push(`呼气 ${m.exhale}s`);
+        if (m.hold2) parts.push(`屏息 ${m.hold2}s`);
+        document.getElementById('breath-info').textContent =
+          parts.join('  ·  ');
+      }
+
+      function toggleBreath() {
+        if (breathRunning) stopBreath();
+        else startBreath();
+      }
+
+      function stopBreath() {
+        breathRunning = false;
+        clearTimeout(breathTimer);
+        const orb = document.getElementById('breath-orb');
+        orb.className = 'breath-orb';
+        document.getElementById('orb-label').textContent = '点击开始';
+        document.getElementById('breath-status').textContent = '';
+        document.getElementById('breath-count').textContent = '';
+        document.getElementById('breath-start-btn').textContent = '开始';
+      }
+
+      function startBreath() {
+        breathRunning = true;
+        breathRound = 0;
+        document.getElementById('breath-start-btn').textContent = '停止';
+        nextPhase('inhale');
+      }
+
+      function nextPhase(phase) {
+        if (!breathRunning) return;
+        const m = BREATH_MODES[breathMode];
+        const orb = document.getElementById('breath-orb');
+
+        const phaseMap = {
+          inhale: {
+            label: '吸 气',
+            next: m.hold > 0 ? 'hold' : 'exhale',
+            dur: m.inhale,
+            css: 'inhale',
+            cssProp: '--in-dur',
+          },
+          hold: {
+            label: '屏 息',
+            next: 'exhale',
+            dur: m.hold,
+            css: 'hold',
+            cssProp: '--hold-dur',
+          },
+          exhale: {
+            label: '呼 气',
+            next: m.hold2 > 0 ? 'hold2' : 'inhale',
+            dur: m.exhale,
+            css: 'exhale',
+            cssProp: '--ex-dur',
+          },
+          hold2: {
+            label: '屏 息',
+            next: 'inhale',
+            dur: m.hold2,
+            css: 'hold2',
+            cssProp: '--hold2-dur',
+          },
+        };
+
+        const p = phaseMap[phase];
+        orb.style.setProperty(p.cssProp, p.dur + 's');
+        orb.className = 'breath-orb';
+        void orb.offsetWidth; // reflow
+        orb.className = 'breath-orb ' + p.css;
+
+        if (phase === 'inhale') {
+          document.getElementById('orb-label').textContent = '吸';
+        } else if (phase === 'exhale') {
+          document.getElementById('orb-label').textContent = '呼';
+          breathRound++;
+          document.getElementById('breath-count').textContent = breathRound;
+        } else {
+          document.getElementById('orb-label').textContent = '停';
+        }
+
+        document.getElementById('breath-status').textContent = p.label;
+
+        breathTimer = setTimeout(() => {
+          if (!breathRunning) return;
+          nextPhase(p.next);
+        }, p.dur * 1000);
+      }
+
+      // ═══════════════════════════════════════════
+      //  冥想计时器
+      // ═══════════════════════════════════════════
+      let timerTotal = 5 * 60;
+      let timerRemaining = 5 * 60;
+      let timerInterval = null;
+      let timerRunning = false;
+      const CIRCUM = 2 * Math.PI * 108; // ≈ 678.6
+
+      document.querySelectorAll('#timer-presets .preset-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document
+            .querySelectorAll('#timer-presets .preset-btn')
+            .forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          timerTotal = parseInt(btn.dataset.mins) * 60;
+          resetTimer();
+        });
+      });
+
+      function updateTimerDisplay() {
+        const m = Math.floor(timerRemaining / 60);
+        const s = timerRemaining % 60;
+        document.getElementById('timer-display').textContent =
+          String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        const progress = timerRemaining / timerTotal;
+        document.getElementById('timer-progress').style.strokeDashoffset =
+          CIRCUM * (1 - progress);
+      }
+
+      function toggleTimer() {
+        if (timerRunning) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('timer-play-btn').textContent = '▶';
+          document.getElementById('timer-label').textContent = '已暂停';
+        } else {
+          if (timerRemaining <= 0) resetTimer();
+          timerRunning = true;
+          document.getElementById('timer-play-btn').textContent = '⏸';
+          document.getElementById('timer-label').textContent = '冥想中...';
+          timerInterval = setInterval(() => {
+            timerRemaining--;
+            updateTimerDisplay();
+            if (timerRemaining <= 0) {
+              clearInterval(timerInterval);
+              timerRunning = false;
+              document.getElementById('timer-play-btn').textContent = '▶';
+              document.getElementById('timer-label').textContent = '圆满完成 ✦';
+              playBell();
+            }
+          }, 1000);
+        }
+      }
+
+      function resetTimer() {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerRemaining = timerTotal;
+        document.getElementById('timer-play-btn').textContent = '▶';
+        document.getElementById('timer-label').textContent = '准备好了吗';
+        updateTimerDisplay();
+      }
+
+      function adjustTimer(delta) {
+        if (timerRunning) return;
+        timerTotal = Math.max(60, timerTotal + delta);
+        timerRemaining = timerTotal;
+        // 同步 preset 高亮
+        document
+          .querySelectorAll('#timer-presets .preset-btn')
+          .forEach((btn) => {
+            btn.classList.toggle(
+              'active',
+              parseInt(btn.dataset.mins) * 60 === timerTotal
+            );
+          });
+        updateTimerDisplay();
+      }
+
+      // 简易钟声（Web Audio）
+      function playBell() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(528, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(264, ctx.currentTime + 2);
+          gain.gain.setValueAtTime(0.4, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 2.5);
+        } catch (e) {}
+      }
+
+      // 环境音（Web Audio noise）
+      const audioCtx = {};
+      const soundNodes = {};
+      function toggleSound(btn) {
+        const type = btn.dataset.sound;
+        if (btn.classList.contains('active')) {
+          btn.classList.remove('active');
+          if (soundNodes[type]) {
+            soundNodes[type].stop();
+            delete soundNodes[type];
+          }
+          return;
+        }
+        btn.classList.add('active');
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const buf = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate);
+          const data = buf.getChannelData(0);
+          for (let i = 0; i < buf.length; i++) data[i] = Math.random() * 2 - 1;
+          const src = ctx.createBufferSource();
+          const filter = ctx.createBiquadFilter();
+          const gain = ctx.createGain();
+          src.buffer = buf;
+          src.loop = true;
+
+          // 不同音效调整滤波
+          const filterMap = {
+            rain: 'bandpass',
+            forest: 'lowpass',
+            ocean: 'lowshelf',
+            fire: 'highpass',
+          };
+          const freqMap = { rain: 800, forest: 400, ocean: 200, fire: 1200 };
+          filter.type = filterMap[type] || 'lowpass';
+          filter.frequency.value = freqMap[type] || 600;
+          gain.gain.value = 0.06;
+
+          src.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          src.start();
+          soundNodes[type] = src;
+        } catch (e) {}
+      }
+
+      // ═══════════════════════════════════════════
+      //  正念日记
+      // ═══════════════════════════════════════════
+      let selectedMood = '';
+      document.querySelectorAll('#mood-row .mood-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document
+            .querySelectorAll('#mood-row .mood-btn')
+            .forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedMood = btn.dataset.mood;
+        });
+      });
+
+      function injectPrompt(text) {
+        const ta = document.getElementById('journal-textarea');
+        const pos = ta.selectionStart;
+        const before = ta.value.substring(0, pos);
+        const after = ta.value.substring(pos);
+        ta.value = before + text + after;
+        ta.focus();
+        ta.selectionStart = ta.selectionEnd = pos + text.length;
+      }
+
+      function saveEntry() {
+        const text = document.getElementById('journal-textarea').value.trim();
+        if (!text) return;
+        const entries = getEntries();
+        entries.unshift({
+          date: new Date().toLocaleString('zh-CN', {
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+          mood: selectedMood,
+          text,
+        });
+        localStorage.setItem(
+          'mindful_entries',
+          JSON.stringify(entries.slice(0, 50))
+        );
+        document.getElementById('journal-textarea').value = '';
+        selectedMood = '';
+        document
+          .querySelectorAll('#mood-row .mood-btn')
+          .forEach((b) => b.classList.remove('selected'));
+        renderEntries();
+      }
+
+      function getEntries() {
+        try {
+          return JSON.parse(localStorage.getItem('mindful_entries') || '[]');
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function renderEntries() {
+        const list = document.getElementById('entries-list');
+        const entries = getEntries();
+        if (!entries.length) {
+          list.innerHTML =
+            '<div style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0;">还没有记录，留下今天的第一笔吧。</div>';
+          return;
+        }
+        list.innerHTML = entries
+          .map(
+            (e) => `
+    <div class="entry-item">
+      <div class="entry-meta">
+        <span class="entry-date-tag">${e.date}</span>
+        <span class="entry-mood">${e.mood || ''}</span>
+      </div>
+      <div class="entry-text">${escapeHtml(e.text)}</div>
+    </div>
+  `
+          )
+          .join('');
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      // ═══════════════════════════════════════════
+      //  专注倒计时
+      // ═══════════════════════════════════════════
+      let cdH = 0,
+        cdM = 25,
+        cdS = 0;
+      let cdTotalSecs = 0;
+      let cdRemaining = 0;
+      let cdRunning = false;
+      let cdInterval = null;
+
+      function cdQuickSet(mins, btn) {
+        if (cdRunning) return;
+        cdH = 0;
+        cdM = mins;
+        cdS = 0;
+        document
+          .querySelectorAll('.cd-preset-btn')
+          .forEach((b) => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        renderCdPicker();
+        updateCdStaticDisplay();
+      }
+
+      function cdAdjust(unit, delta) {
+        if (cdRunning) return;
+        if (unit === 'h') cdH = Math.max(0, Math.min(23, cdH + delta));
+        if (unit === 'm') cdM = Math.max(0, Math.min(59, cdM + delta));
+        if (unit === 's') cdS = Math.max(0, Math.min(59, cdS + delta));
+        document
+          .querySelectorAll('.cd-preset-btn')
+          .forEach((b) => b.classList.remove('active'));
+        // re-highlight preset if it matches
+        document.querySelectorAll('.cd-preset-btn').forEach((b) => {
+          if (cdH === 0 && cdS === 0 && parseInt(b.dataset.mins) === cdM)
+            b.classList.add('active');
+        });
+        renderCdPicker();
+        updateCdStaticDisplay();
+      }
+
+      function renderCdPicker() {
+        document.getElementById('cd-h').textContent = String(cdH).padStart(
+          2,
+          '0'
+        );
+        document.getElementById('cd-m').textContent = String(cdM).padStart(
+          2,
+          '0'
+        );
+        document.getElementById('cd-s').textContent = String(cdS).padStart(
+          2,
+          '0'
+        );
+      }
+
+      function updateCdStaticDisplay() {
+        const total = cdH * 3600 + cdM * 60 + cdS;
+        document.getElementById('cd-display').textContent = formatCdTime(total);
+        document.getElementById('cd-progress-fill').style.width = '100%';
+      }
+
+      function toggleCountdown() {
+        const doneMsg = document.getElementById('cd-done-msg');
+        doneMsg.style.display = 'none';
+        if (cdRunning) {
+          clearInterval(cdInterval);
+          cdRunning = false;
+          document.getElementById('cd-play-btn').textContent = '▶';
+          document.getElementById('cd-picker').classList.remove('disabled');
+        } else {
+          if (cdRemaining <= 0) {
+            cdTotalSecs = cdH * 3600 + cdM * 60 + cdS;
+            if (cdTotalSecs <= 0) return;
+            cdRemaining = cdTotalSecs;
+          }
+          const taskName = document.getElementById('cd-task-name').value.trim();
+          document.getElementById('cd-task-label').textContent = taskName || '';
+          cdRunning = true;
+          document.getElementById('cd-play-btn').textContent = '⏸';
+          document.getElementById('cd-picker').classList.add('disabled');
+          refreshCdDisplay();
+          cdInterval = setInterval(() => {
+            cdRemaining--;
+            refreshCdDisplay();
+            if (cdRemaining <= 0) {
+              clearInterval(cdInterval);
+              cdRunning = false;
+              document.getElementById('cd-play-btn').textContent = '▶';
+              document.getElementById('cd-picker').classList.remove('disabled');
+              document.getElementById('cd-done-msg').style.display = 'block';
+              playBell();
+              saveCdTask();
+            }
+          }, 1000);
+        }
+      }
+
+      function refreshCdDisplay() {
+        const disp = document.getElementById('cd-display');
+        disp.textContent = formatCdTime(cdRemaining);
+        disp.classList.toggle('urgent', cdRemaining <= 10 && cdRemaining > 0);
+        const pct = cdTotalSecs > 0 ? (cdRemaining / cdTotalSecs) * 100 : 0;
+        document.getElementById('cd-progress-fill').style.width = pct + '%';
+      }
+
+      function resetCountdown() {
+        clearInterval(cdInterval);
+        cdRunning = false;
+        cdRemaining = 0;
+        document.getElementById('cd-play-btn').textContent = '▶';
+        document.getElementById('cd-display').classList.remove('urgent');
+        document.getElementById('cd-task-label').textContent = '';
+        document.getElementById('cd-done-msg').style.display = 'none';
+        document.getElementById('cd-picker').classList.remove('disabled');
+        updateCdStaticDisplay();
+      }
+
+      function formatCdTime(secs) {
+        const h = Math.floor(secs / 3600);
+        const m = Math.floor((secs % 3600) / 60);
+        const s = secs % 60;
+        if (h > 0)
+          return (
+            String(h).padStart(2, '0') +
+            ':' +
+            String(m).padStart(2, '0') +
+            ':' +
+            String(s).padStart(2, '0')
+          );
+        return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+      }
+
+      function saveCdTask() {
+        const name =
+          document.getElementById('cd-task-name').value.trim() || '专注任务';
+        const history = getCdHistory();
+        history.unshift({
+          name,
+          duration: formatCdTime(cdTotalSecs),
+          time: new Date().toLocaleTimeString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        });
+        localStorage.setItem(
+          'mindful_cd_history',
+          JSON.stringify(history.slice(0, 30))
+        );
+        renderCdHistory();
+      }
+
+      function getCdHistory() {
+        try {
+          return JSON.parse(localStorage.getItem('mindful_cd_history') || '[]');
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function renderCdHistory() {
+        const list = document.getElementById('cd-history-list');
+        const items = getCdHistory();
+        if (!items.length) {
+          list.innerHTML =
+            '<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px 0;">完成第一个任务后，它会出现在这里。</div>';
+          return;
+        }
+        list.innerHTML = items
+          .map(
+            (i) => `
+          <div class="cd-history-item">
+            <span class="cd-history-name">${escapeHtml(i.name)}</span>
+            <span class="cd-history-meta">${i.duration} &nbsp;·&nbsp; ${i.time}</span>
+          </div>
+        `
+          )
+          .join('');
+      }
+
+      // ═══════════════════════════════════════════
+      //  初始化
+      // ═══════════════════════════════════════════
+      (function init() {
+        refreshQuote();
+        updateBreathInfo();
+        updateTimerDisplay();
+        renderEntries();
+        renderCdHistory();
+
+        // 日期
+        document.getElementById('journal-date').textContent =
+          new Date().toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long',
+          });
+      })();
+    </script>
+  </body>
+</html>

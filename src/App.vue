@@ -1,26 +1,26 @@
 <template>
-  <div class="stars">
-    <header>
-      <div class="logo">正 念</div>
-      <nav>
-        <button
-          v-for="item in navItems"
-          :key="item.path"
-          :class="{ active: route.path === item.path }"
-          @click="router.push(item.path)"
-        >
-          {{ item.label }}
-        </button>
-      </nav>
-    </header>
+  <div class="stars"></div>
 
-    <div class="container">
-      <RouterView v-slot="{ Component }">
-        <Transition name="page-fade" mode="out-in">
-          <component :is="Component" v-if="Component" :key="route.path" />
-        </Transition>
-      </RouterView>
-    </div>
+  <header>
+    <div class="logo">正 念</div>
+    <nav>
+      <button
+        v-for="item in navItems"
+        :key="item.path"
+        :class="{ active: route.path === item.path }"
+        @click="router.push(item.path)"
+      >
+        {{ item.label }}
+      </button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <RouterView v-slot="{ Component }">
+      <Transition name="page-fade" mode="out-in">
+        <component :is="Component" v-if="Component" :key="route.path" />
+      </Transition>
+    </RouterView>
   </div>
 </template>
 

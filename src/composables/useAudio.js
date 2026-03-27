@@ -8,17 +8,38 @@ export function useAudio() {
   function playBell() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(528, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(264, ctx.currentTime + 2);
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 2.5);
+
+      // 敲击一次铃声：freq 频率，t 起始时间，dur 持续时长，vol 峰值音量
+      function strike(freq, t, dur, vol) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        // 第二谐波叠加，让音色更饱满
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc.type = 'sine';
+        osc2.type = 'sine';
+        osc.frequency.value = freq;
+        osc2.frequency.value = freq * 2.756; // 非整数谐波，类钟声
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(vol, t + 0.01); // 瞬间起音
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur); // 缓慢衰减
+        gain2.gain.setValueAtTime(0, t);
+        gain2.gain.linearRampToValueAtTime(vol * 0.3, t + 0.01);
+        gain2.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + dur);
+        osc2.start(t);
+        osc2.stop(t + dur);
+      }
+
+      // 三次敲击：0s / 1.5s / 3.0s，每次渐弱，总时长约 5s
+      strike(528, ctx.currentTime, 5.0, 0.45);
+      strike(528, ctx.currentTime + 1.5, 3.5, 0.3);
+      strike(528, ctx.currentTime + 3.0, 2.0, 0.18);
     } catch (e) {}
   }
 

@@ -1,4 +1,6 @@
-<template>
+import { writeFileSync } from 'fs';
+
+const content = `<template>
   <!-- 全屏遮罩：仅在全屏时显示，只含时钟 -->
   <Teleport to="body">
     <div v-if="isFullscreen" class="cd-fullscreen-overlay" @click.self="toggleFullscreen">
@@ -53,7 +55,7 @@
       </div>
     </div>
 
-    <div class="cd-task-label">{{ isCountdownActive && runningTaskName ? runningTaskName : '\u00a0' }}</div>
+    <div class="cd-task-label">{{ isCountdownActive && runningTaskName ? runningTaskName : '\\u00a0' }}</div>
     <div class="cd-display" :class="{ urgent: cdRemaining <= 10 && cdRemaining > 0 }">{{ cdDisplayText }}</div>
 
     <div class="cd-progress-track">
@@ -232,3 +234,7 @@ onUnmounted(() => {
   document.removeEventListener('fullscreenchange', onFullscreenChange);
 });
 </script>
+`;
+
+writeFileSync('src/views/CountdownView.vue', content, 'utf8');
+console.log('Written successfully, bytes:', Buffer.byteLength(content, 'utf8'));
